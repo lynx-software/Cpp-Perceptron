@@ -3,8 +3,7 @@
     CSC385 Data Structures & Algorithms
     Perceptron
 
-    calculates sums, sigmoids, and predictions for
-    space-separated values in a file
+    machine learning
 */
 
 #include <iostream>
@@ -17,33 +16,27 @@ using namespace std;
 const bool DEBUG_MODE = false;
 const double E = 2.7182818284;
 
-// function prototypes
-void InputData(vector<vector<int> > &data);
-
-int main() {
-    vector<vector<int> > data;
-    PerceptronT perceptron;
-
-    InputData(data);
-    perceptron.GetData(data);
-    perceptron.ProcessData();
-
-    return 0;
-}
-
 class PerceptronT {
     public:
         // function prototypes
         PerceptronT();
-        void GetData(const vector<vector<int> > &dataInput);
+        void InputData();
         void ProcessData();
+
     private:
         vector<vector<int> > data;
         float coefficients[3];
         int bias;
-
-        //vector<bool> predictions;
 };
+
+int main() {
+    PerceptronT perceptron;
+
+    perceptron.InputData();
+    perceptron.ProcessData();
+
+    return 0;
+}
 
 // sets default values for perceptrons
 PerceptronT::PerceptronT() {
@@ -55,14 +48,8 @@ PerceptronT::PerceptronT() {
     return;
 }
 
-// input data to perceptron
-void PerceptronT::GetData(const vector<vector<int> > &dataInput) {
-    data = dataInput;
-    return;
-}
-
 // get data from file
-void InputData(vector<vector<int> > &data) {
+void PerceptronT::InputData() {
     ifstream inFile;
     string fileName;
     string line;
@@ -86,11 +73,13 @@ void InputData(vector<vector<int> > &data) {
             // convert to c string, then integer
             newVector.push_back(atoi(substring.c_str()));
         }
+        
         data.push_back(newVector);
         newVector.clear();
         position = 0;
         getline(inFile, line);
     }
+
     inFile.close();
     return;
 }

@@ -21,7 +21,8 @@ class PerceptronT {
         // function prototypes
         PerceptronT();
         void InputData();
-        void ProcessData();
+        void DoOneEpoch();
+        void Do100Epochs();
 
     private:
         vector<vector<int> > data;
@@ -33,7 +34,7 @@ int main() {
     PerceptronT perceptron;
 
     perceptron.InputData();
-    perceptron.ProcessData();
+    perceptron.DoOneEpoch();
 
     return 0;
 }
@@ -73,7 +74,7 @@ void PerceptronT::InputData() {
             // convert to c string, then integer
             newVector.push_back(atoi(substring.c_str()));
         }
-        
+
         data.push_back(newVector);
         newVector.clear();
         position = 0;
@@ -85,7 +86,7 @@ void PerceptronT::InputData() {
 }
 
 // does calculations and prints results
-void PerceptronT::ProcessData() {
+void PerceptronT::DoOneEpoch() {
     double sum;
     double sigmoid;
     bool prediction;
@@ -95,28 +96,47 @@ void PerceptronT::ProcessData() {
         sum = data[i][0] * coefficients[0]
             + data[i][1] * coefficients[1]
             + float(bias) * coefficients[2];
-        cout << "sum = " << sum << endl;
+        // cout << "sum = " << sum << endl;
 
         sigmoid = 1/(1 + pow(E, -sum));
-        cout << "sigmoid = " << sigmoid << endl;
+        // cout << "sigmoid = " << sigmoid << endl;
 
         if (sigmoid < .5) {
             prediction = false;
         } else {
             prediction = true;
         }
-        cout << "prediction = " << prediction << endl;
+        // cout << "prediction = " << prediction << endl;
         
         if (DEBUG_MODE) {
             cout << "data[i][2] = " << data[i][2] << endl;
         }
-        if (prediction == data[i][2]) {
-            
-            cout << "prediction agrees with target" << endl;
-        } else {
-            cout << "prediction disagrees with target" << endl;
+
+        // if (prediction == data[i][2]) {    
+        //     cout << "prediction agrees with target" << endl;
+        // } else {
+        //     cout << "prediction disagrees with target" << endl;
+        // }
+    }
+
+    return;
+}
+
+void PerceptronT::Do100Epochs() {
+    // Output the mean accuracy over the last 100 epochs as well as the accuracy of the last epoch. Thus, there will be two accuracy measures output after the 100th epoch, again after the 200th epoch, and so on, ending in the two measures after the 1,000th epoch.
+
+    for (int i = 0; i < 100; i++) {
+        DoOneEpoch();
+    }
+
+    cout << "coefficients: ";
+    for (int i = 0; i < 3; i++) {
+        cout << coefficients[i];
+        if (i < 2) {
+            cout << ", ";
         }
     }
+    cout << endl;
 
     return;
 }

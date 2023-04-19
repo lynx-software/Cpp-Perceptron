@@ -15,6 +15,7 @@ using namespace std;
 
 const bool DEBUG_MODE = false;
 const double E = 2.7182818284;
+const double LEARNING_RATE = 0.01;
 
 class PerceptronT {
     public:
@@ -25,6 +26,9 @@ class PerceptronT {
         void Do100Epochs();
 
     private:
+        void AdjustCoefficients(const double & sigmoid,
+            const bool & prediction, const int & dataIndex);
+            
         vector<vector<int> > data;
         float coefficients[3];
         int bias;
@@ -34,7 +38,7 @@ int main() {
     PerceptronT perceptron;
 
     perceptron.InputData();
-    perceptron.DoOneEpoch();
+    perceptron.Do100Epochs();
 
     return 0;
 }
@@ -85,6 +89,19 @@ void PerceptronT::InputData() {
     return;
 }
 
+void PerceptronT::AdjustCoefficients(const double & sigmoid, const bool & prediction, const int & dataIndex) {
+    // inputs: coeff = coeff + [lrate × sig × (1 - sig) × (target - prediction) × in]
+    for (int i = 0; i < 2; i++) {
+        coefficients[i] = coefficients[i] +  (LEARNING_RATE * sigmoid * (1 - sigmoid) * (data[dataIndex][2] - int(prediction)) * data[dataIndex][i]);
+    }
+
+    // bias coefficient
+    coefficients[2] = coefficients[2] + (LEARNING_RATE * sigmoid * (1 - sigmoid) * (data[dataIndex][2] - int(prediction)));
+
+    return;
+}
+
+
 // does calculations and prints results
 void PerceptronT::DoOneEpoch() {
     double sum;
@@ -110,6 +127,11 @@ void PerceptronT::DoOneEpoch() {
         
         if (DEBUG_MODE) {
             cout << "data[i][2] = " << data[i][2] << endl;
+        }
+
+        if (prediction != data[i][2]) {
+            // prediction disagrees with target
+            AdjustCoefficients(sigmoid, prediction, i);
         }
 
         // if (prediction == data[i][2]) {    

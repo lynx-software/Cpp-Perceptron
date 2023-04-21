@@ -22,12 +22,11 @@ class PerceptronT {
         // function prototypes
         PerceptronT();
         void InputData();
-        void DoOneEpoch();
+        int DoOneEpoch();
         void Do100Epochs();
 
     private:
-        void AdjustCoefficients(const double & sigmoid,
-            const bool & prediction, const int & dataIndex);
+        void AdjustCoefficients(const double & sigmoid, const bool & prediction, const int & dataIndex);
             
         vector<vector<int> > data;
         float coefficients[3];
@@ -104,7 +103,7 @@ void PerceptronT::AdjustCoefficients(const double & sigmoid, const bool & predic
 
 
 // does calculations and prints results
-void PerceptronT::DoOneEpoch() {
+int PerceptronT::DoOneEpoch() {
     double sum;
     double sigmoid;
     bool prediction;
@@ -134,17 +133,20 @@ void PerceptronT::DoOneEpoch() {
 
     cout << "Last epoch accuracy: " << static_cast<float>(amountCorrectLastEpoch) / static_cast<float>(data.size()) << endl;
 
-    return;
+    return amountCorrectLastEpoch;
 }
 
 void PerceptronT::Do100Epochs() {
     // Output the mean accuracy over the last 100 epochs as well as the accuracy of the last epoch. Thus, there will be two accuracy measures output after the 100th epoch, again after the 200th epoch, and so on, ending in the two measures after the 1,000th epoch.
+    int amountCorrect = 0;
+    float accuracy = 0;
 
     for (int i = 0; i < 100; i++) {
-        DoOneEpoch();
+        amountCorrect += DoOneEpoch();
     }
     
-    // cout << "Last 100 epochs accuracy: " << accuracy << endl;
+    accuracy = static_cast<float>(amountCorrect) / static_cast<float>(data.size() * 100);
+    cout << "\nLast 100 epochs accuracy: " << accuracy << endl;
 
     cout << "coefficients: ";
     for (int i = 0; i < 3; i++) {

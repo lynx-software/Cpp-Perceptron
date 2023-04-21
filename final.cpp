@@ -134,7 +134,7 @@ int PerceptronT::DoOneEpoch() {
         }
     }
 
-    // cout << "Last epoch accuracy: " << static_cast<float>(amountCorrectLastEpoch) / static_cast<float>(data.size()) << endl;
+    cout << "Last epoch accuracy: " << static_cast<float>(amountCorrectLastEpoch) / static_cast<float>(data.size()) << endl;
 
     return amountCorrectLastEpoch;
 }

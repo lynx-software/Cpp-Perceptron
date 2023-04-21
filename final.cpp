@@ -38,7 +38,9 @@ int main() {
     PerceptronT perceptron;
 
     perceptron.InputData();
-    perceptron.Do100Epochs();
+    for (int i = 0; i < 10; i++) {
+        perceptron.Do100Epochs();
+    }
 
     return 0;
 }
@@ -64,7 +66,6 @@ void PerceptronT::InputData() {
 
     cout << "Enter a file name: ";
     cin >> fileName;
-    cout << endl;
     inFile.open(fileName.c_str());
     getline(inFile, line);
 
@@ -107,39 +108,31 @@ void PerceptronT::DoOneEpoch() {
     double sum;
     double sigmoid;
     bool prediction;
+    int amountCorrectLastEpoch = 0;
 
     for (int i = 0; i < data.size(); i++) {
         // calculate sum & sigmoid
         sum = data[i][0] * coefficients[0]
             + data[i][1] * coefficients[1]
             + float(bias) * coefficients[2];
-        // cout << "sum = " << sum << endl;
 
         sigmoid = 1/(1 + pow(E, -sum));
-        // cout << "sigmoid = " << sigmoid << endl;
 
         if (sigmoid < .5) {
             prediction = false;
         } else {
             prediction = true;
         }
-        // cout << "prediction = " << prediction << endl;
-        
-        if (DEBUG_MODE) {
-            cout << "data[i][2] = " << data[i][2] << endl;
-        }
 
         if (prediction != data[i][2]) {
             // prediction disagrees with target
             AdjustCoefficients(sigmoid, prediction, i);
+        } else {
+            amountCorrectLastEpoch++;
         }
-
-        // if (prediction == data[i][2]) {    
-        //     cout << "prediction agrees with target" << endl;
-        // } else {
-        //     cout << "prediction disagrees with target" << endl;
-        // }
     }
+
+    cout << "Last epoch accuracy: " << static_cast<float>(amountCorrectLastEpoch) / static_cast<float>(data.size()) << endl;
 
     return;
 }
@@ -150,6 +143,8 @@ void PerceptronT::Do100Epochs() {
     for (int i = 0; i < 100; i++) {
         DoOneEpoch();
     }
+    
+    // cout << "Last 100 epochs accuracy: " << accuracy << endl;
 
     cout << "coefficients: ";
     for (int i = 0; i < 3; i++) {

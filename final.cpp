@@ -10,10 +10,11 @@
 #include <fstream>
 #include <vector>
 #include <cmath>
+#include <errno.h>
 
 using namespace std;
 
-const bool DEBUG_MODE = false;
+const bool DEBUG_MODE = true;
 const double E = 2.7182818284;
 const double LEARNING_RATE = 0.01;
 
@@ -32,6 +33,8 @@ class PerceptronT {
         float coefficients[3];
         int bias;
 };
+
+void GetFile(ifstream & inFile);
 
 int main() {
     PerceptronT perceptron;
@@ -56,18 +59,16 @@ PerceptronT::PerceptronT() {
 
 // get data from file
 void PerceptronT::InputData() {
-    ifstream inFile;
-    string fileName;
     string line;
     vector<int> newVector;
     size_t position = 0;
     string substring;
+    ifstream inFile;
+    
+    GetFile(inFile);
+    assert("Cannot open file" && inFile.is_open());
 
-    cout << "Enter a file name: ";
-    cin >> fileName;
-    inFile.open(fileName.c_str());
     getline(inFile, line);
-
     while (inFile) {
         while (position != string::npos) {
             position = line.find(" ");
@@ -84,6 +85,8 @@ void PerceptronT::InputData() {
         position = 0;
         getline(inFile, line);
     }
+
+    assert("Data must not be empty" && data.size() > 0);
 
     inFile.close();
     return;
@@ -131,7 +134,7 @@ int PerceptronT::DoOneEpoch() {
         }
     }
 
-    cout << "Last epoch accuracy: " << static_cast<float>(amountCorrectLastEpoch) / static_cast<float>(data.size()) << endl;
+    // cout << "Last epoch accuracy: " << static_cast<float>(amountCorrectLastEpoch) / static_cast<float>(data.size()) << endl;
 
     return amountCorrectLastEpoch;
 }
@@ -156,6 +159,23 @@ void PerceptronT::Do100Epochs() {
         }
     }
     cout << endl;
+
+    return;
+}
+
+void GetFile(ifstream & inFile) {
+    string fileName;
+    int saveErrno;
+
+    cout << "Enter a file name: ";
+    cin >> fileName;
+    inFile.open(fileName.c_str());
+
+    saveErrno = errno;
+    if (saveErrno != 0) {
+        cout << "\n--- ERROR: " << strerror(saveErrno) << " ---" << endl;
+    }
+    errno = 0;
 
     return;
 }

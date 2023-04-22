@@ -20,20 +20,25 @@ const double LEARNING_RATE = 0.01;
 
 class PerceptronT {
     public:
-        // function prototypes
         PerceptronT();
+        // get data from file
         void InputData();
+        // does sigmoid calculations on perceptron data for one epochs
         int DoOneEpoch();
+        // do 100 epochs, print accuracy of last 100 epochs, print coefficients
         void Do100Epochs();
 
     private:
+        // facilitates learning when perceptron guesses wrong
         void AdjustCoefficients(const double & sigmoid, const bool & prediction, const int & dataIndex);
             
+        // 2d vector of ints from input file
         vector<vector<int> > data;
         float coefficients[3];
         int bias;
 };
 
+// prompt user to enter file name, open the file
 void GetFile(ifstream & inFile);
 
 int main() {
@@ -47,7 +52,6 @@ int main() {
     return 0;
 }
 
-// sets default values for perceptrons
 PerceptronT::PerceptronT() {
     coefficients[0] = 0.58;
     coefficients[1] = -0.67;
@@ -57,7 +61,6 @@ PerceptronT::PerceptronT() {
     return;
 }
 
-// get data from file
 void PerceptronT::InputData() {
     string line;
     vector<int> newVector;
@@ -104,8 +107,6 @@ void PerceptronT::AdjustCoefficients(const double & sigmoid, const bool & predic
     return;
 }
 
-
-// does calculations and prints results
 int PerceptronT::DoOneEpoch() {
     double sum;
     double sigmoid;
@@ -140,7 +141,6 @@ int PerceptronT::DoOneEpoch() {
 }
 
 void PerceptronT::Do100Epochs() {
-    // Output the mean accuracy over the last 100 epochs as well as the accuracy of the last epoch. Thus, there will be two accuracy measures output after the 100th epoch, again after the 200th epoch, and so on, ending in the two measures after the 1,000th epoch.
     int amountCorrect = 0;
     float accuracy = 0;
 

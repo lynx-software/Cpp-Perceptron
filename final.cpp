@@ -11,6 +11,8 @@
 #include <vector>
 #include <cmath>
 #include <errno.h>
+#include <cassert>
+#include <cstring>
 
 using namespace std;
 

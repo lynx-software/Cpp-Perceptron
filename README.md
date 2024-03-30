@@ -1,1 +1,1 @@
-Using a perceptron for maching learning & artificial intelligence.
+A C++ perceptron for maching learning & artificial intelligence.

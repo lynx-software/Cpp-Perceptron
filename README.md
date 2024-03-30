@@ -1,1 +1,1 @@
-Using a multi-layer perceptron for maching learning & artificial intelligence.
+Using a perceptron for maching learning & artificial intelligence.
